@@ -6,13 +6,24 @@ import tensorflow as tf
 from tensorflow.keras.optimizers.experimental import RMSprop
 import numpy as np
 
-training_dir = "images/horse-or-human/"
-validation_dir = "images/validation-horse-or-human"
+TRAINING_DIR = "images/horse-or-human/"
+VALIDATION_DIR = "images/validation-horse-or-human"
 
 # rescale to 1./255
-train_datagen = ImageDataGenerator(rescale=1/255)
+train_datagen = ImageDataGenerator(
+    rescale=1/255,
+    # after initial results, added image augmentation to improve the training data
+    rotation_range=40,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest'
+
+)
 train_generator = train_datagen.flow_from_directory(
-    training_dir,
+    TRAINING_DIR,
     target_size=(300, 300),
     class_mode='binary'
 )
@@ -83,26 +94,32 @@ model.compile(loss='binary_crossentropy',
 
 # get validation data
 validation_datagen = ImageDataGenerator(rescale=1/255)
-validation_generator = validation_datagen.flow_from_directory(validation_dir,
+validation_generator = validation_datagen.flow_from_directory(VALIDATION_DIR,
                                                               target_size=(300, 300),
                                                               class_mode='binary')
 # Found 256 images belonging to 2 classes.
 
-history=model.fit_generator(train_generator,
-                            epochs=15,
-                            validation_data=validation_generator)
+model.fit_generator(train_generator,
+                    epochs=15,
+                    validation_data=validation_generator)
 
 # Epoch 15/15
-# 33/33 [==============================] - 15s 444ms/step - loss: 5.4388e-05 - accuracy: 1.0000 - val_loss: 4.9753 - val_accuracy: 0.8047
+# 33/33 [==============================] - 15s 444ms/step -
+# loss: 5.4388e-05 - accuracy: 1.0000 - val_loss: 4.9753 - val_accuracy: 0.8047
 # looks to be overfitting
 
 # test it!
-test_dir = "images/testing-horse-or-human/"
-test_image_names = ['human-1.jpg', 'human-2.jpg', 'human-3.jpg', 'horse-1.jpg', 'horse-2.jpg', 'horse-3.jpg']
+TEST_DIR = "images/testing-horse-or-human/"
+test_image_names = ['human-1.jpg',
+                    'human-2.jpg',
+                    'human-3.jpg',
+                    'horse-1.jpg',
+                    'horse-2.jpg',
+                    'horse-3.jpg']
 
 for image_name in test_image_names:
-    path = test_dir + image_name
-    img = image.load_img(path, target_size=(300, 300))
+    PATH = TEST_DIR + image_name
+    img = image.load_img(PATH, target_size=(300, 300))
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
 
