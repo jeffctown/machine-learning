@@ -1,4 +1,5 @@
-"""Tensorflow to bring in all of the juicy ML goodness"""
+"""CNN for classification - predicting clothing types found in images"""
+
 import tensorflow as tf
 data = tf.keras.datasets.fashion_mnist
 (training_images, training_labels), (testing_images, testing_labels) = data.load_data()
@@ -30,3 +31,7 @@ model.evaluate(testing_images, testing_labels)
 classifications = model.predict(testing_images)
 print(classifications[0])
 print(testing_labels[0])
+
+# [1.5337873e-11 4.6833150e-15 6.8722241e-12 2.3794763e-11 1.6816113e-11
+# 4.2387438e-08 1.0751111e-11 3.7891855e-08 2.3104289e-14 9.9999988e-01]
+# 9

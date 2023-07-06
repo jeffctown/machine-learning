@@ -1,4 +1,4 @@
-"""CNN for classification of predicting whether an image contains a human or horse"""
+"""CNN for classification - predicting whether an image contains a human or horse"""
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.preprocessing import image
