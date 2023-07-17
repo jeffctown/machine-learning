@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import numpy as np
 import collections.abc
-#tensorflow_datasets needs the following alias to be done manually.te
+#tensorflow_datasets needs the following alias to be done manually.
 collections.Iterable = collections.abc.Iterable
 import tensorflow_datasets as tfds
 
