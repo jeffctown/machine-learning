@@ -1,2 +1,3 @@
 **/test-images/
 *.h5
+**/training-data/
