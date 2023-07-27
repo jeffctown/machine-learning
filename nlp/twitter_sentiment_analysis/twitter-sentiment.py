@@ -1,8 +1,10 @@
+"""Playing with sentiment analysis in tensorflow"""
+
+import csv
+import string
 import tensorflow as tf
 import numpy as np
-import csv
 from bs4 import BeautifulSoup
-import string
 import nltk
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
@@ -11,8 +13,9 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorflow.keras.callbacks import EarlyStopping
 
+class TwitterSentimentAnalyzer:
+    """An ML class trained with Twitter data to predict positivity """
 
-class TwitterSentamentAnalyzer:
     SENTIMENT_THRESHOLDS = (0.4, 0.7)
 
     def __init__(self,
@@ -34,7 +37,7 @@ class TwitterSentamentAnalyzer:
         self.truncate = truncate
         self.oov_token = oov_token
         self.max_vocab_size = max_vocab_size
-        self.max_epochs = 100
+        self.max_epochs = max_epochs
         self.embedding_dim = embedding_dim
         self.positive_label = positive_label
         self.neutral_label = neutral_label
@@ -95,9 +98,9 @@ class TwitterSentamentAnalyzer:
     def encode_label(self, label):
         if label == self.positive_label:
             return 1.0
-        elif label == self.neutral_label:
+        if label == self.neutral_label:
             return 0.0
-        elif label == self.negative_label:
+        if label == self.negative_label:
             return -1.0
         return None
 
@@ -152,10 +155,8 @@ class TwitterSentamentAnalyzer:
                 label = self.negative_label
             elif score >= self.SENTIMENT_THRESHOLDS[1]:
                 label = self.negative_label
-
             return label
-        else:
-            return self.negative_label if score < 0.5 else self.negative_label
+        return self.negative_label if score < 0.5 else self.negative_label
 
     def plot_training_history(self):
         print(f'{self.history.history.keys()}')
@@ -173,6 +174,7 @@ class TwitterSentamentAnalyzer:
 
         plt.figure()
 
+        plt.plot(epochs, loss, 'b', label='Training loss')
         plt.plot(epochs, val_loss, 'r', label='Validation loss')
         plt.title('Training and validation loss')
         plt.legend()
@@ -180,7 +182,7 @@ class TwitterSentamentAnalyzer:
         plt.show()
 
 def main():
-    analyzer = TwitterSentamentAnalyzer()
+    analyzer = TwitterSentimentAnalyzer()
     analyzer.train()
     analyzer.predict("I hate the rain")
     analyzer.predict("I love sunny days")
